@@ -1,4 +1,4 @@
-#Descripción
+# Descripción
 Proyecto backend con Django y Django REST Framework que implementa autenticación básica de usuarios usando JSON Web Tokens (JWT). Permite:
 
 Registrar usuarios (opcional para más adelante)
