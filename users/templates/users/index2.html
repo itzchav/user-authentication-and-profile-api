@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Iniciar Sesión</title>
+</head>
+<body>
+  <h1>Login de Usuario</h1>
+  <form id="loginForm">
+    <label>Usuario: <input type="text" id="username" required /></label><br />
+    <label>Contraseña: <input type="password" id="password" required /></label><br />
+    <button type="submit">Iniciar Sesión</button>
+  </form>
+
+  <div id="message"></div>
+  <pre id="tokenOutput" style="background:#eee; padding:10px; margin-top:10px;"></pre>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const messageDiv = document.getElementById('message');
+    const tokenOutput = document.getElementById('tokenOutput');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/users/login/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          messageDiv.innerText = '¡Login exitoso!';
+
+          // Mostrar los tokens en el HTML
+          tokenOutput.innerText = `Access Token:\n${data.access}\n\nRefresh Token:\n${data.refresh}`;
+        } else {
+          messageDiv.innerText = `Error: ${data.detail || JSON.stringify(data)}`;
+          tokenOutput.innerText = '';
+        }
+      } catch (error) {
+        messageDiv.innerText = `Error en la conexión: ${error.message}`;
+        tokenOutput.innerText = '';
+      }
+    });
+  </script>
+</body>
+</html>

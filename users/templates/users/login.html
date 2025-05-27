@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Iniciar sesión</title>
+</head>
+<body>
+  <h1>Iniciar sesión</h1>
+  <form id="loginForm">
+    <label>Usuario: <input type="text" id="username" required></label><br>
+    <label>Contraseña: <input type="password" id="password" required></label><br>
+    <button type="submit">Iniciar sesión</button>
+  </form>
+
+  <div id="message"></div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const messageDiv = document.getElementById('message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/users/login/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          messageDiv.innerText = '¡Sesión iniciada!';
+          localStorage.setItem('access', data.access);
+          window.location.href = '/profile/';
+        } else {
+          messageDiv.innerText = 'Error: ' + (data.detail || JSON.stringify(data));
+        }
+      } catch (error) {
+        messageDiv.innerText = 'Error en la conexión: ' + error.message;
+      }
+    });
+  </script>
+</body>
+</html>

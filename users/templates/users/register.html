@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro</title>
+</head>
+<body>
+  <h1>Registro de Usuario</h1>
+  <form id="registerForm">
+    <label>Usuario: <input type="text" id="username" required /></label><br />
+    <label>Contraseña: <input type="password" id="password" required /></label><br />
+    <button type="submit">Registrar</button>
+  </form>
+  <div id="message"></div>
+  <pre id="tokenOutput"></pre>
+
+  <script>
+    const form = document.getElementById('registerForm');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      const response = await fetch('/api/users/register/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await response.json();
+      document.getElementById('message').innerText = response.ok ? '¡Registrado!' : 'Error: ' + (data.detail || JSON.stringify(data));
+      document.getElementById('tokenOutput').innerText = JSON.stringify(data, null, 2);
+    });
+  </script>
+</body>
+</html>

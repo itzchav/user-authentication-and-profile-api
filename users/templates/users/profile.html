@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Perfil de Usuario</title>
+</head>
+<body>
+  <h1>Perfil</h1>
+  <div id="profileInfo"></div>
+  <button onclick="cerrarSesion()">Cerrar sesión</button>
+
+  <script>
+    const token = localStorage.getItem('access');
+    if (!token) {
+      alert('No estás autenticado');
+      window.location.href = '/login/';
+    }
+
+    fetch('http://127.0.0.1:8000/api/users/me/', {
+      headers: { 'Authorization': 'Bearer ' + token }
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('No autorizado');
+      return response.json();
+    })
+    .then(data => {
+      document.getElementById('profileInfo').innerText = `Bienvenido, ${data.username}`;
+    })
+    .catch(error => {
+      console.error(error);
+      alert('Error: debes iniciar sesión');
+      window.location.href = '/login/';
+    });
+
+    function cerrarSesion() {
+      localStorage.removeItem('access');
+      window.location.href = '/login/';
+    }
+  </script>
+</body>
+</html>

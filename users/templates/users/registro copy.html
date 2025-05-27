@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Usuario</title>
+</head>
+<body>
+  <h1>Registro de Usuario</h1>
+  
+  <form id="registerForm">
+    <label>Usuario: <input type="text" id="username" required /></label><br><br>
+    <label>Contraseña: <input type="password" id="password" required /></label><br><br>
+    <button type="submit">Registrar</button>
+  </form>
+  
+  <div id="message"></div>
+
+  <script>
+    const form = document.getElementById('registerForm');
+    const messageDiv = document.getElementById('message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();  // Evita que el formulario recargue la página
+      
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('http://127.0.0.1:8000/api/users/register/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          messageDiv.innerText = '¡Usuario registrado con éxito!';
+        } else {
+          messageDiv.innerText = `Error: ${data.detail || JSON.stringify(data)}`;
+        }
+      } catch (error) {
+        messageDiv.innerText = `Error de conexión: ${error.message}`;
+      }
+    });
+  </script>
+</body>
+</html>
