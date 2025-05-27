@@ -17,9 +17,9 @@ Perfil: Endpoint protegido que retorna datos del usuario autenticado.
 Logout: (Implementación en frontend removiendo el token localmente)
 
 Tecnologías usadas
-Python 3.x
+Python 3
 
-Django 5.x
+Django 5
 
 Django REST Framework
 
