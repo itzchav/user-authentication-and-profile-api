@@ -7,6 +7,9 @@ urlpatterns = [
     path('login/', login_view, name='login'),  # Mostrar formulario HTML
     path('profile/', profile_view, name='profile'),  # 👈 Nuevo endpoint seguro
     path('me/', user_profile, name='user-profile'),
+    #path('api/users/', include('users.urls')),
+    path('api/', include('tasks.urls')),  # <- agrega esta línea para incluir tasks
+
 
     #path('api/users/', include('users.urls')),
 
