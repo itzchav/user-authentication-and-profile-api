@@ -97,7 +97,7 @@
 <body>
   <div class="container">
     <h1>Perfil</h1>
-    <div id="profileInfo"></div>
+    <div id="profileInfo">Cargando...</div>
 
     <h2>Tus Tareas</h2>
     <ul id="taskList"></ul>
@@ -111,28 +111,22 @@
 
   <script>
     const token = localStorage.getItem('access');
+    const apiBase = 'https://user-authentication-and-profile-api.onrender.com';
+
     if (!token) {
       alert('No estás autenticado');
       window.location.href = '/login/';
     }
 
-    fetch('https://user-authentication-and-profile-api.onrender.com/api/token/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password })
+    // Cargar perfil del usuario
+    fetch(`${apiBase}/users/me/`, {
+      headers: {
+        'Authorization': 'Bearer ' + token
+      }
     })
-    .then(res => res.json())
-    .then(data => {
-    if (data.access) {
-      localStorage.setItem('access', data.access);
-      window.location.href = '/tasks/';
-    } else {
-      alert('Credenciales incorrectas');
-    }
-    })
-    .then(response => {
-      if (!response.ok) throw new Error('No autorizado');
-      return response.json();
+    .then(res => {
+      if (!res.ok) throw new Error('No autorizado');
+      return res.json();
     })
     .then(data => {
       document.getElementById('profileInfo').innerText = `Bienvenido, ${data.username}`;
@@ -144,11 +138,14 @@
       window.location.href = '/login/';
     });
 
+    // Cargar tareas
     function cargarTareas() {
-      fetch('https://user-authentication-and-profile-api.onrender.com/api/tasks/', {
-        headers: { 'Authorization': 'Bearer ' + token }
+      fetch(`${apiBase}/api/tasks/`, {
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
       })
-      .then(response => response.json())
+      .then(res => res.json())
       .then(tareas => {
         const taskList = document.getElementById('taskList');
         taskList.innerHTML = '';
@@ -170,7 +167,7 @@
       const titulo = document.getElementById('newTaskTitle').value.trim();
       if (!titulo) return;
 
-      fetch('https://user-authentication-and-profile-api.onrender.com/api/tasks/', {
+      fetch(`${apiBase}/api/tasks/`, {
         method: 'POST',
         headers: {
           'Authorization': 'Bearer ' + token,
@@ -178,7 +175,6 @@
         },
         body: JSON.stringify({ title: titulo })
       })
-      .then(response => response.json())
       .then(() => {
         cargarTareas();
         document.getElementById('newTaskTitle').value = '';
@@ -188,7 +184,7 @@
     function editarTarea(id, tituloActual) {
       const nuevoTitulo = prompt('Nuevo título:', tituloActual);
       if (nuevoTitulo) {
-        fetch(`http://127.0.0.1:8000/api/tasks/${id}/`, {
+        fetch(`${apiBase}/api/tasks/${id}/`, {
           method: 'PUT',
           headers: {
             'Authorization': 'Bearer ' + token,
@@ -201,9 +197,11 @@
     }
 
     function eliminarTarea(id) {
-      fetch(`http://127.0.0.1:8000/api/tasks/${id}/`, {
+      fetch(`${apiBase}/api/tasks/${id}/`, {
         method: 'DELETE',
-        headers: { 'Authorization': 'Bearer ' + token }
+        headers: {
+          'Authorization': 'Bearer ' + token
+        }
       })
       .then(() => cargarTareas());
     }
