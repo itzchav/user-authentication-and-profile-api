@@ -4,7 +4,94 @@
   <meta charset="UTF-8">
   <title>Perfil de Usuario</title>
   <style>
-    /* ... estilos iguales que ya tienes ... */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #e6ecff;
+      color: #333;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 40px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    h1, h2, h3 {
+      text-align: center;
+      color: #2648c2;
+    }
+
+    #profileInfo {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    ul {
+      padding: 0;
+      list-style-type: none;
+    }
+
+    li {
+      background-color: #f0f4ff;
+      border: 1px solid #ccc;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    li button {
+      margin-left: 8px;
+      background: #6a8eff;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s;
+    }
+
+    li button:hover {
+      background: #4f66d0;
+    }
+
+    #newTaskTitle {
+      width: 100%;
+      padding: 12px;
+      margin: 15px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    .btn {
+      display: inline-block;
+      background: linear-gradient(to right, #6a8eff, #a855f7);
+      color: white;
+      font-weight: bold;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s, transform 0.2s;
+      margin: 10px auto;
+      display: block;
+    }
+
+    .btn:hover {
+      background: linear-gradient(to right, #4f66d0, #9333ea);
+      transform: scale(1.03);
+    }
   </style>
 </head>
 <body>
@@ -29,9 +116,19 @@
       window.location.href = '/login/';
     }
 
-    // Obtener datos del usuario autenticado
-    fetch('https://user-authentication-and-profile-api.onrender.com/users/me/', {
-      headers: { 'Authorization': 'Bearer ' + token }
+    fetch('https://user-authentication-and-profile-api.onrender.com/api/token/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+    })
+    .then(res => res.json())
+    .then(data => {
+    if (data.access) {
+      localStorage.setItem('access', data.access);
+      window.location.href = '/tasks/';
+    } else {
+      alert('Credenciales incorrectas');
+    }
     })
     .then(response => {
       if (!response.ok) throw new Error('No autorizado');
@@ -91,7 +188,7 @@
     function editarTarea(id, tituloActual) {
       const nuevoTitulo = prompt('Nuevo título:', tituloActual);
       if (nuevoTitulo) {
-        fetch(`https://user-authentication-and-profile-api.onrender.com/api/tasks/${id}/`, {
+        fetch(`http://127.0.0.1:8000/api/tasks/${id}/`, {
           method: 'PUT',
           headers: {
             'Authorization': 'Bearer ' + token,
@@ -104,7 +201,7 @@
     }
 
     function eliminarTarea(id) {
-      fetch(`https://user-authentication-and-profile-api.onrender.com/api/tasks/${id}/`, {
+      fetch(`http://127.0.0.1:8000/api/tasks/${id}/`, {
         method: 'DELETE',
         headers: { 'Authorization': 'Bearer ' + token }
       })
