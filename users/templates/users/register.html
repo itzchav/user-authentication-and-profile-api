@@ -1,26 +1,135 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Registro</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro - TaskFlow</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #6a8eff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #333;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 40px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #2648c2;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 15px;
+      text-align: left;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-top: 5px;
+      font-size: 14px;
+    }
+
+    .btn {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      background: linear-gradient(to right, #6a8eff, #a855f7);
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.03);
+      background: linear-gradient(to right, #4f66d0, #9333ea);
+    }
+
+    .back-btn {
+      margin-top: 10px;
+      background: none;
+      border: none;
+      color: #2648c2;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .back-btn:hover {
+      color: #1a2d88;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+    pre {
+      text-align: left;
+      margin-top: 10px;
+      background: #f4f4f4;
+      padding: 10px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 12px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Registro de Usuario</h1>
-  <form id="registerForm">
-    <label>Usuario: <input type="text" id="username" required /></label><br />
-    <label>Contraseña: <input type="password" id="password" required /></label><br />
-    <button type="submit">Registrar</button>
-  </form>
-  <div id="message"></div>
-  <pre id="tokenOutput"></pre>
+  <div class="container">
+    <h1>Registro de Usuario</h1>
+    <form id="registerForm">
+      <label for="username">Usuario:
+        <input type="text" id="username" name="username" required />
+      </label>
 
-  <script>
-    const form = document.getElementById('registerForm');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
+      <label for="password">Contraseña:
+        <input type="password" id="password" name="password" required />
+      </label>
 
+      <button class="btn" type="submit">Registrar</button>
+    </form>
+
+    <button class="back-btn" onclick="window.location.href='/'">← Volver al inicio</button>
+
+    <div id="message"></div>
+    
+  </div>
+
+ <script>
+  const form = document.getElementById('registerForm');
+  const message = document.getElementById('message');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    try {
       const response = await fetch('/api/users/register/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -28,9 +137,22 @@
       });
 
       const data = await response.json();
-      document.getElementById('message').innerText = response.ok ? '¡Registrado!' : 'Error: ' + (data.detail || JSON.stringify(data));
-      document.getElementById('tokenOutput').innerText = JSON.stringify(data, null, 2);
-    });
-  </script>
+      message.style.color = response.ok ? 'green' : '#d32f2f';
+
+      if (response.ok) {
+        message.innerText = '¡Usuario registrado con éxito!';
+      } else if (data.username && data.username[0].includes('already exists')) {
+        message.innerText = 'Error: El usuario ya existe';
+      } else {
+        message.innerText = 'Error: ' + (data.detail || 'No se pudo completar el registro.');
+      }
+
+    } catch (error) {
+      message.style.color = '#d32f2f';
+      message.innerText = 'Error en la conexión: ' + error.message;
+    }
+  });
+</script>
+
 </body>
 </html>

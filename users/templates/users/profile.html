@@ -3,19 +3,111 @@
 <head>
   <meta charset="UTF-8">
   <title>Perfil de Usuario</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #e6ecff;
+      color: #333;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 40px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    h1, h2, h3 {
+      text-align: center;
+      color: #2648c2;
+    }
+
+    #profileInfo {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+
+    ul {
+      padding: 0;
+      list-style-type: none;
+    }
+
+    li {
+      background-color: #f0f4ff;
+      border: 1px solid #ccc;
+      padding: 10px 15px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    li button {
+      margin-left: 8px;
+      background: #6a8eff;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s;
+    }
+
+    li button:hover {
+      background: #4f66d0;
+    }
+
+    #newTaskTitle {
+      width: 100%;
+      padding: 12px;
+      margin: 15px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+    }
+
+    .btn {
+      display: inline-block;
+      background: linear-gradient(to right, #6a8eff, #a855f7);
+      color: white;
+      font-weight: bold;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s, transform 0.2s;
+      margin: 10px auto;
+      display: block;
+    }
+
+    .btn:hover {
+      background: linear-gradient(to right, #4f66d0, #9333ea);
+      transform: scale(1.03);
+    }
+  </style>
 </head>
 <body>
-  <h1>Perfil</h1>
-  <div id="profileInfo"></div>
+  <div class="container">
+    <h1>Perfil</h1>
+    <div id="profileInfo"></div>
 
-  <h2>Tus Tareas</h2>
-  <ul id="taskList"></ul>
+    <h2>Tus Tareas</h2>
+    <ul id="taskList"></ul>
 
-  <h3>Agregar Tarea</h3>
-  <input type="text" id="newTaskTitle" placeholder="Título de la tarea">
-  <button onclick="agregarTarea()">Agregar</button>
+    <h3>Agregar Tarea</h3>
+    <input type="text" id="newTaskTitle" placeholder="Título de la tarea">
+    <button class="btn" onclick="agregarTarea()">Agregar Tarea</button>
 
-  <button onclick="cerrarSesion()">Cerrar sesión</button>
+    <button class="btn" onclick="cerrarSesion()">Cerrar sesión</button>
+  </div>
 
   <script>
     const token = localStorage.getItem('access');
@@ -24,7 +116,6 @@
       window.location.href = '/login/';
     }
 
-    // Mostrar perfil
     fetch('http://127.0.0.1:8000/api/users/me/', {
       headers: { 'Authorization': 'Bearer ' + token }
     })
@@ -34,7 +125,7 @@
     })
     .then(data => {
       document.getElementById('profileInfo').innerText = `Bienvenido, ${data.username}`;
-      cargarTareas();  // Cargar tareas después de obtener perfil
+      cargarTareas();
     })
     .catch(error => {
       console.error(error);
@@ -42,7 +133,6 @@
       window.location.href = '/login/';
     });
 
-    // Cargar lista de tareas
     function cargarTareas() {
       fetch('http://127.0.0.1:8000/api/tasks/', {
         headers: { 'Authorization': 'Bearer ' + token }
@@ -50,22 +140,25 @@
       .then(response => response.json())
       .then(tareas => {
         const taskList = document.getElementById('taskList');
-        taskList.innerHTML = '';  // Limpiar lista
+        taskList.innerHTML = '';
         tareas.forEach(tarea => {
           const li = document.createElement('li');
           li.innerHTML = `
-            ${tarea.title} 
-            <button onclick="editarTarea(${tarea.id}, '${tarea.title}')">Editar</button>
-            <button onclick="eliminarTarea(${tarea.id})">Eliminar</button>
+            <span>${tarea.title}</span>
+            <div>
+              <button onclick="editarTarea(${tarea.id}, '${tarea.title}')">Editar</button>
+              <button onclick="eliminarTarea(${tarea.id})">Eliminar</button>
+            </div>
           `;
           taskList.appendChild(li);
         });
       });
     }
 
-    // Agregar tarea
     function agregarTarea() {
-      const titulo = document.getElementById('newTaskTitle').value;
+      const titulo = document.getElementById('newTaskTitle').value.trim();
+      if (!titulo) return;
+
       fetch('http://127.0.0.1:8000/api/tasks/', {
         method: 'POST',
         headers: {
@@ -75,13 +168,12 @@
         body: JSON.stringify({ title: titulo })
       })
       .then(response => response.json())
-      .then(data => {
-        cargarTareas();  // Recargar tareas
-        document.getElementById('newTaskTitle').value = '';  // Limpiar input
+      .then(() => {
+        cargarTareas();
+        document.getElementById('newTaskTitle').value = '';
       });
     }
 
-    // Editar tarea (simplemente cambia el título)
     function editarTarea(id, tituloActual) {
       const nuevoTitulo = prompt('Nuevo título:', tituloActual);
       if (nuevoTitulo) {
@@ -93,12 +185,10 @@
           },
           body: JSON.stringify({ title: nuevoTitulo })
         })
-        .then(response => response.json())
-        .then(data => cargarTareas());
+        .then(() => cargarTareas());
       }
     }
 
-    // Eliminar tarea
     function eliminarTarea(id) {
       fetch(`http://127.0.0.1:8000/api/tasks/${id}/`, {
         method: 'DELETE',
@@ -107,7 +197,6 @@
       .then(() => cargarTareas());
     }
 
-    // Cerrar sesión
     function cerrarSesion() {
       localStorage.removeItem('access');
       window.location.href = '/login/';

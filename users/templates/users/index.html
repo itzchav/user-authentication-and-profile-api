@@ -1,12 +1,91 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Inicio</title>
+  {% load static %}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inicio - TaskFlow</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #6a8eff, #d1c4f7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+    }
+
+    .container {
+      background-color: white;
+      padding: 40px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      max-width: 360px;
+      width: 100%;
+    }
+
+    .logo {
+      width: 200px;
+      height: 200px;
+      object-fit: contain;
+      margin-bottom: 15px;
+    }
+
+    h1 {
+      color: #2648c2;
+      margin-bottom: 5px;
+      font-size: 28px;
+    }
+
+    .slogan {
+      font-style: italic;
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 25px;
+    }
+
+    .btn {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 14px;
+      font-size: 16px;
+      font-weight: bold;
+      color: white;
+      background: linear-gradient(to right, #85a9f6e4, #b775f5);
+      border: none;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.3s;
+    }
+
+    .btn:hover {
+      transform: scale(1.03);
+      background: linear-gradient(to right, #4f66d0, #9233eaea);
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 30px 20px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Bienvenido</h1>
-  <button onclick="location.href='/register/'">Registrarse</button>
-  <button onclick="location.href='/login/'">Iniciar sesión</button>
+  <div class="container">
+    
+    <img src="{% static 'logo.png' %}" alt="Logo TaskFlow" class="logo">
+
+
+    <h1>TaskFlow</h1>
+    <p class="slogan">Organiza. Ejecuta. Logra.</p>
+    
+    <button class="btn" onclick="location.href='/register/'">Registrarse</button>
+    <button class="btn" onclick="location.href='/login/'">Iniciar sesión</button>
+  </div>
 </body>
 </html>
