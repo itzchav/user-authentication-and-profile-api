@@ -17,5 +17,4 @@ EXPOSE 8000
 # Comando para correr el servidor de desarrollo de Django
 #CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "backend.wsgi:application"]
-CMD ["sh", "-c", "python manage.py migrate && gunicorn nombre_proyecto.wsgi:application --bind 0.0.0.0:8000"]
-
+CMD ["sh", "-c", "python manage.py collectstatic --noinput && python manage.py migrate && gunicorn myproject.wsgi:application --bind 0.0.0.0:8000"]
