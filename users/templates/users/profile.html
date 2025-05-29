@@ -116,7 +116,7 @@
       window.location.href = '/login/';
     }
 
-    fetch('http://127.0.0.1:8000/api/users/me/', {
+    fetch('https://user-authentication-and-profile-api.onrender.com/users/me/', {
       headers: { 'Authorization': 'Bearer ' + token }
     })
     .then(response => {
@@ -134,7 +134,7 @@
     });
 
     function cargarTareas() {
-      fetch('http://127.0.0.1:8000/api/tasks/', {
+      fetch('https://user-authentication-and-profile-api.onrender.com/api/tasks/', {
         headers: { 'Authorization': 'Bearer ' + token }
       })
       .then(response => response.json())
@@ -159,7 +159,7 @@
       const titulo = document.getElementById('newTaskTitle').value.trim();
       if (!titulo) return;
 
-      fetch('http://127.0.0.1:8000/api/tasks/', {
+      fetch('https://user-authentication-and-profile-api.onrender.com/api/tasks/', {
         method: 'POST',
         headers: {
           'Authorization': 'Bearer ' + token,
@@ -177,7 +177,7 @@
     function editarTarea(id, tituloActual) {
       const nuevoTitulo = prompt('Nuevo título:', tituloActual);
       if (nuevoTitulo) {
-        fetch(`http://127.0.0.1:8000/api/tasks/${id}/`, {
+        fetch(`https://user-authentication-and-profile-api.onrender.com/api/tasks/${id}/`, {
           method: 'PUT',
           headers: {
             'Authorization': 'Bearer ' + token,
@@ -190,7 +190,7 @@
     }
 
     function eliminarTarea(id) {
-      fetch(`http://127.0.0.1:8000/api/tasks/${id}/`, {
+      fetch(`https://user-authentication-and-profile-api.onrender.com/api/tasks/${id}/`, {
         method: 'DELETE',
         headers: { 'Authorization': 'Bearer ' + token }
       })
