@@ -173,15 +173,13 @@ DATABASES = {
     }
 }
 
-STATIC_URL = '/static/'
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-#if not DEBUG:
-#    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-#    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static",
-]
+STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 DEBUG = os.getenv("DEBUG", "0") == "1"
 
