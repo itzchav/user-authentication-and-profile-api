@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: user-auth
+    env: docker
+    plan: free
+    buildCommand: "./manage.sh"
+    startCommand: "gunicorn --bind 0.0.0.0:8000 backend.wsgi:application"
