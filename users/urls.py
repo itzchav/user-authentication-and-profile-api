@@ -9,7 +9,7 @@ urlpatterns = [
     path('profile/', profile_view, name='profile'),  # 👈 Nuevo endpoint seguro
     path('me/', user_profile),  # ← Asegúrate que esta usa @permission_classes([IsAuthenticated])
     #path('api/users/', include('users.urls')),
-    path('api/', include('tasks.urls')),  # <- agrega esta línea para incluir tasks
+    #path('api/', include('tasks.urls')),  # <- agrega esta línea para incluir tasks
 
 
     #path('api/users/', include('users.urls')),
