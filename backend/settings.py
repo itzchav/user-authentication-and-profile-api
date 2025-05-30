@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-w5clmk+40ylr4vxshv+&s*brj6s3g+)ame0tn=*bxy$_u%vj6-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 CORS_ALLOWED_ORIGINS = [
-    "https://user-authentication-and-profile-api.onrender.com/",
+    "https://user-authentication-and-profile-api.onrender.com",
 
     "http://localhost:3000",  # si pruebas localmente
 ]
