@@ -17,11 +17,6 @@ from rest_framework.decorators import api_view
 from rest_framework.decorators import permission_classes
 from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect
-from django.http import JsonResponse
-
-def current_user_profile(request):
-    # Example implementation
-    return JsonResponse({"message": "Current user profile"})
 
 # ============================================================================
 # 🔐 Serializer para registrar usuarios
