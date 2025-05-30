@@ -1,6 +1,5 @@
 from django.urls import include, path
 from .views import RegisterUser, login_view, register_view, index, profile_view,user_profile
-from .views import current_user_profile
 
 urlpatterns = [
     path('', index, name='index'),  # Página principal HTML
