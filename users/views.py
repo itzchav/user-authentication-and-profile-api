@@ -152,7 +152,7 @@ def profile_view(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def user_profile(request):
-    print("TOKEN RECIBIDO:", request.headers.get('Authorization'))  # 👈
+    print("TOKEN RECIBIDO:", request.headers.get('Authorization'))  
     return Response({
         "id": request.user.id,
         "username": request.user.username
