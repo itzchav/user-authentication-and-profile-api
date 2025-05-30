@@ -7,7 +7,7 @@ urlpatterns = [
     path('register/', register_view, name='register'),  # Mostrar formulario HTML
     path('login/', login_view, name='login'),  # Mostrar formulario HTML
     path('profile/', profile_view, name='profile'),  # 👈 Nuevo endpoint seguro
-    path('me/', current_user_profile),
+    path('me/', user_profile),  # ← Asegúrate que esta usa @permission_classes([IsAuthenticated])
     #path('api/users/', include('users.urls')),
     path('api/', include('tasks.urls')),  # <- agrega esta línea para incluir tasks
 
