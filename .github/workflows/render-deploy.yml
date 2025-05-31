@@ -1,4 +1,4 @@
-name: Deploy to Render
+name: CI/CD Pipeline for Render Deployment
 
 on:
   push:
@@ -6,17 +6,33 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-test-deploy:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Trigger Render deploy
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
       run: |
-        curl -X POST https://api.render.com/deploy/srv-d0sbmb3e5dus73ekmq7g \
-        -H 'Authorization: Bearer ${{ secrets.RENDER_API_KEY }}'
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest  # Asegura que pytest esté instalado
+
     - name: Run tests
       run: |
         pytest tests/
+
+    - name: Trigger Render deploy
+      if: success()  # Solo si los tests pasaron
+      run: |
+        curl -X POST https://api.render.com/deploy/srv-d0sbmb3e5dus73ekmq7g \
+        -H 'Authorization: Bearer ${{ secrets.RENDER_API_KEY }}'
+
+    
+    
