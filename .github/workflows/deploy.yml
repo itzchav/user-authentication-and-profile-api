@@ -16,7 +16,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10'   # O ajusta a la versión que uses
+        python-version: '3.10'
 
     - name: Install dependencies
       run: |
@@ -25,11 +25,11 @@ jobs:
 
     - name: Run tests
       run: |
-        pytest   # O el comando que uses para correr tests
-      continue-on-error: false  # Si falla, el workflow se detiene
+        pytest   # <-- Aquí podría fallar si no encuentra tests o no está configurado
+      continue-on-error: false
 
     - name: Trigger Render deploy
-      if: success()  # Solo si los pasos anteriores pasaron
+      if: success()
       run: |
         curl -X POST https://api.render.com/deploy/srv-d0sbmb3e5dus73ekmq7g \
         -H 'Authorization: Bearer ${{ secrets.RENDER_API_KEY }}'
